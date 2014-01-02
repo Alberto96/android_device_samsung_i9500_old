@@ -1,0 +1,455 @@
+From 68f817da799f9e8baccb3d5409827ce8a7fbd99c Mon Sep 17 00:00:00 2001
+From: Ethan Chen <intervigil@gmail.com>
+Date: Wed, 25 Sep 2013 15:44:47 -0700
+Subject: [PATCH] binder: update MemoryHeapIon
+
+* Update from ODROID-XU 09232013 BSP release
+
+Change-Id: I5245c8a9f783e8902bf91a0ee23e60ebeb335b27
+---
+ include/binder/MemoryHeapBaseIon.h |  51 -----------------
+ include/binder/MemoryHeapIon.h     |  53 +++++++++++++++++
+ libs/binder/Android.mk             |  32 +++++++++--
+ libs/binder/IMemory.cpp            |   8 +--
+ libs/binder/MemoryHeapBaseIon.cpp  |  96 -------------------------------
+ libs/binder/MemoryHeapIon.cpp      | 113 +++++++++++++++++++++++++++++++++++++
+ 6 files changed, 196 insertions(+), 157 deletions(-)
+ delete mode 100644 include/binder/MemoryHeapBaseIon.h
+ create mode 100644 include/binder/MemoryHeapIon.h
+ delete mode 100644 libs/binder/MemoryHeapBaseIon.cpp
+ create mode 100644 libs/binder/MemoryHeapIon.cpp
+
+diff --git a/include/binder/MemoryHeapBaseIon.h b/include/binder/MemoryHeapBaseI
+deleted file mode 100644
+index 0fe99c7..0000000
+--- a/include/binder/MemoryHeapBaseIon.h
++++ /dev/null
+@@ -1,51 +0,0 @@
+-/*
+- * Copyright (C) 2008 The Android Open Source Project
+- * Copyright 2011, Samsung Electronics Co. LTD
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-/*!
+- * \file MemoryHeapBaseIon.h
+- * \brief header file for MemoryHeapBaseIon
+- * \author MinGu, Jeon(mingu85.jeon)
+- * \date 2011/11/20
+- *
+- * <b>Revision History: </b>
+- * - 2011/11/21 : MinGu, Jeon(mingu85.jeon)) \n
+- * Initial version
+- */
+-
+-#ifndef ANDROID_MEMORY_HEAP_BASE_ION_H
+-#define ANDROID_MEMORY_HEAP_BASE_ION_H
+-
+-#include <binder/IMemory.h>
+-#include <binder/MemoryHeapBase.h>
+-#include <stdlib.h>
+-
+-namespace android {
+-
+-class MemoryHeapBaseIon : public MemoryHeapBase
+-{
+-public:
+-    enum {
+-        USE_ION_FD = IMemoryHeap::USE_ION_FD
+-    };
+-    MemoryHeapBaseIon(size_t size, uint32_t flags = 0, char const* name = NULL)
+-    MemoryHeapBaseIon(int fd, size_t size, uint32_t flags = 0, uint32_t offset 
+-    ~MemoryHeapBaseIon();
+-private:
+-    int mIonClient;
+-};
+-
+-};
+-#endif
+diff --git a/include/binder/MemoryHeapIon.h b/include/binder/MemoryHeapIon.h
+new file mode 100644
+index 0000000..8643a8b
+--- /dev/null
++++ b/include/binder/MemoryHeapIon.h
+@@ -0,0 +1,53 @@
++/*
++ * Copyright (C) 2008 The Android Open Source Project
++ * Copyright 2011, Samsung Electronics Co. LTD
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++/*!
++ * \file MemoryHeapIon.h
++ * \brief header file for MemoryHeapIon
++ * \author MinGu, Jeon(mingu85.jeon)
++ * \date 2011/11/20
++ *
++ * <b>Revision History: </b>
++ * - 2011/11/21 : MinGu, Jeon(mingu85.jeon)) \n
++ * Initial version
++ * - 2012/11/29 : MinGu, Jeon(mingu85.jeon)) \n
++ * Change name
++ */
++
++#ifndef ANDROID_MEMORY_HEAP_ION_H
++#define ANDROID_MEMORY_HEAP_ION_H
++
++#include <binder/IMemory.h>
++#include <binder/MemoryHeapBase.h>
++#include <stdlib.h>
++
++namespace android {
++
++class MemoryHeapIon : public MemoryHeapBase
++{
++public:
++    enum {
++        USE_ION_FD = IMemoryHeap::USE_ION_FD
++    };
++    MemoryHeapIon(size_t size, uint32_t flags = 0, char const* name = NULL);
++    MemoryHeapIon(int fd, size_t size, uint32_t flags = 0, uint32_t offset = 0)
++    ~MemoryHeapIon();
++private:
++    int mIonClient;
++};
++
++};
++#endif
+diff --git a/libs/binder/Android.mk b/libs/binder/Android.mk
+index cb17f78..7861fef 100644
+--- a/libs/binder/Android.mk
++++ b/libs/binder/Android.mk
+@@ -40,16 +40,24 @@ sources += \
+     MemoryHeapPmem.cpp
+ endif
+ 
++ifeq ($(BOARD_NEEDS_MEMORYHEAPION),true)
++sources += \
++    MemoryHeapIon.cpp
++endif
++
+ LOCAL_PATH:= $(call my-dir)
+ 
+ include $(CLEAR_VARS)
+ 
+-ifeq ($(BOARD_USE_V4L2_ION), true)
+-LOCAL_CFLAGS += -DUSE_V4L2_ION
+-sources += \
+-       MemoryHeapBaseIon.cpp
+-LOCAL_C_INCLUDES := hardware/samsung/exynos4/hal/include
+-LOCAL_SHARED_LIBRARIES := libsecion
++ifeq ($(BOARD_NEEDS_MEMORYHEAPION),true)
++LOCAL_SHARED_LIBRARIES += libion_exynos
++LOCAL_CFLAGS += -DUSE_MEMORY_HEAP_ION
++ifneq ($(TARGET_SLSI_VARIANT),)
++PLATFORM_DIR := $(TARGET_BOARD_PLATFORM)-$(TARGET_SLSI_VARIANT)
++else
++PLATFORM_DIR := $(TARGET_BOARD_PLATFORM)
++endif
++LOCAL_C_INCLUDES += hardware/samsung_slsi/$(PLATFORM_DIR)/include
+ endif
+ 
+ LOCAL_LDLIBS += -lpthread
+@@ -60,6 +68,18 @@ LOCAL_SRC_FILES := $(sources)
+ include $(BUILD_SHARED_LIBRARY)
+ 
+ include $(CLEAR_VARS)
++
++ifeq ($(BOARD_NEEDS_MEMORYHEAPION),true)
++LOCAL_SHARED_LIBRARIES += libion_exynos
++LOCAL_CFLAGS += -DUSE_MEMORY_HEAP_ION
++ifneq ($(TARGET_SLSI_VARIANT),)
++PLATFORM_DIR := $(TARGET_BOARD_PLATFORM)-$(TARGET_SLSI_VARIANT)
++else
++PLATFORM_DIR := $(TARGET_BOARD_PLATFORM)
++endif
++LOCAL_C_INCLUDES += hardware/samsung_slsi/$(PLATFORM_DIR)/include
++endif
++
+ LOCAL_LDLIBS += -lpthread
+ LOCAL_MODULE := libbinder
+ LOCAL_STATIC_LIBRARIES += libutils
+diff --git a/libs/binder/IMemory.cpp b/libs/binder/IMemory.cpp
+index 54cc735..7bbe7c4 100644
+--- a/libs/binder/IMemory.cpp
++++ b/libs/binder/IMemory.cpp
+@@ -32,7 +32,7 @@
+ #include <binder/Parcel.h>
+ #include <utils/CallStack.h>
+ 
+-#ifdef USE_V4L2_ION
++#ifdef USE_MEMORY_HEAP_ION
+ #include "ion.h"
+ #endif
+ 
+@@ -303,7 +303,7 @@ void BpMemoryHeap::assertReallyMapped() const
+         ALOGE_IF(err, "binder=%p transaction failed fd=%d, size=%ld, err=%d (%s
+                 asBinder().get(), parcel_fd, size, err, strerror(-err));
+ 
+-#ifdef USE_V4L2_ION
++#ifdef USE_MEMORY_HEAP_ION
+         int ion_client = -1;
+         if (flags & USE_ION_FD) {
+             ion_client = ion_client_create();
+@@ -324,7 +324,7 @@ void BpMemoryHeap::assertReallyMapped() const
+         if (mHeapId == -1) {
+             mRealHeap = true;
+ 
+-#ifdef USE_V4L2_ION
++#ifdef USE_MEMORY_HEAP_ION
+         if (flags & USE_ION_FD) {
+             if (ion_client < 0)
+                 mBase = MAP_FAILED;
+@@ -344,7 +344,7 @@ void BpMemoryHeap::assertReallyMapped() const
+                 android_atomic_write(fd, &mHeapId);
+             }
+         }
+-#ifdef USE_V4L2_ION
++#ifdef USE_MEMORY_HEAP_ION
+         if (ion_client < 0)
+             ion_client = -1;
+         else
+diff --git a/libs/binder/MemoryHeapBaseIon.cpp b/libs/binder/MemoryHeapBaseIon.c
+deleted file mode 100644
+index fe7dbb8..0000000
+--- a/libs/binder/MemoryHeapBaseIon.cpp
++++ /dev/null
+@@ -1,96 +0,0 @@
+-/*
+- * Copyright Samsung Electronics Co.,LTD.
+- * Copyright (C) 2011 The Android Open Source Project
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- * http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-/*!
+- * \file MemoryHeapBaseIon.cpp
+- * \brief source file for MemoryHeapBaseIon
+- * \author MinGu, Jeon(mingu85.jeon)
+- * \date 2011/11/20
+- *
+- * <b>Revision History: </b>
+- * - 2011/11/20 : MinGu, Jeon(mingu85.jeon)) \n
+- * Initial version
+- */
+-
+-#include <stdlib.h>
+-#include <stdint.h>
+-#include <unistd.h>
+-#include <fcntl.h>
+-#include <sys/types.h>
+-#include <cutils/log.h>
+-#include <binder/MemoryHeapBase.h>
+-#include <binder/IMemory.h>
+-#include <binder/MemoryHeapBaseIon.h>
+-#include <unistd.h>
+-#include <sys/types.h>
+-#include <sys/mman.h>
+-#include "ion.h"
+-
+-namespace android {
+-
+-MemoryHeapBaseIon::MemoryHeapBaseIon(size_t size, uint32_t flags, char const *n
+-{
+-    mIonClient = ion_client_create();
+-    if (mIonClient < 0) {
+-        mIonClient = -1;
+-        ALOGE("MemoryHeapBaseIon : ION client creation failed");
+-    }
+-    void* base = NULL;
+-    int fd = ion_alloc(mIonClient, size, 0, ION_HEAP_EXYNOS_MASK);
+-
+-    if (fd < 0) {
+-        ALOGE("MemoryHeapBaseIon : ION memory allocation failed");
+-    } else {
+-        flags |= USE_ION_FD;
+-        base = ion_map(fd, size, 0);
+-        if (base != MAP_FAILED)
+-            init(fd, base, size, flags, NULL);
+-        else
+-            ALOGE("MemoryHeapBaseIon : mmap failed");
+-    }
+-}
+-
+-MemoryHeapBaseIon::MemoryHeapBaseIon(int fd, size_t size, uint32_t flags, uint3
+-{
+-    ALOGE_IF(fd < 0, "MemoryHeapBaseIon : file discriptor error. fd is not for 
+-    mIonClient = ion_client_create();
+-    if (mIonClient < 0) {
+-        mIonClient = -1;
+-        ALOGE("MemoryHeapBaseIon : ION client creation failed");
+-    }
+-    void* base = NULL;
+-    if (fd >= 0) {
+-        int dup_fd = dup(fd);
+-        flags |= USE_ION_FD;
+-        base = ion_map(dup_fd, size, 0);
+-        if (base != MAP_FAILED)
+-            init(dup_fd, base, size, flags, NULL);
+-        else
+-            ALOGE("MemoryHeapBaseIon : mmap failed");
+-    }
+-}
+-
+-MemoryHeapBaseIon::~MemoryHeapBaseIon()
+-{
+-    if (mIonClient != -1) {
+-        ion_unmap(getBase(), getSize());
+-        ion_free(getHeapID());
+-        ion_client_destroy(mIonClient);
+-        mIonClient = -1;
+-    }
+-}
+-
+-};
+diff --git a/libs/binder/MemoryHeapIon.cpp b/libs/binder/MemoryHeapIon.cpp
+new file mode 100644
+index 0000000..ab2aaa9
+--- /dev/null
++++ b/libs/binder/MemoryHeapIon.cpp
+@@ -0,0 +1,113 @@
++/*
++ * Copyright Samsung Electronics Co.,LTD.
++ * Copyright (C) 2011 The Android Open Source Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ * http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++/*!
++ * \file MemoryHeapIon.cpp
++ * \brief source file for MemoryHeapIon
++ * \author MinGu, Jeon(mingu85.jeon)
++ * \date 2011/11/20
++ *
++ * <b>Revision History: </b>
++ * - 2011/11/20 : MinGu, Jeon(mingu85.jeon)) \n
++ * Initial version
++ * - 2012/11/29 : MinGu, Jeon(mingu85.jeon)) \n
++ * Change name
++ */
++
++#include <stdlib.h>
++#include <stdint.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <sys/types.h>
++#include <cutils/log.h>
++#include <binder/MemoryHeapBase.h>
++#include <binder/IMemory.h>
++#include <binder/MemoryHeapIon.h>
++#include <unistd.h>
++#include <sys/types.h>
++#include <sys/mman.h>
++#include "ion.h"
++
++namespace android {
++
++MemoryHeapIon::MemoryHeapIon(size_t size, uint32_t flags, char const *name):Mem
++{
++    void* base = NULL;
++    int fd = -1;
++
++    mIonClient = ion_client_create();
++
++    if (mIonClient < 0) {
++        ALOGE("MemoryHeapIon : ION client creation failed : %s", strerror(errno
++        mIonClient = -1;
++    } else {
++        fd = ion_alloc(mIonClient, size, 0, ION_HEAP_SYSTEM_MASK, ION_FLAG_CACH
++        if (fd < 0) {
++            ALOGE("MemoryHeapIon : ION memory allocation failed(size[%u]) : %s"
++        } else {
++            flags |= USE_ION_FD;
++            base = ion_map(fd, size, 0);
++            if (base != MAP_FAILED) {
++                init(fd, base, size, flags, NULL);
++            } else {
++                ALOGE("MemoryHeapIon : mmap failed(size[%u], fd[%d]) : %s", siz
++                ion_free(fd);
++            }
++        }
++    }
++}
++
++MemoryHeapIon::MemoryHeapIon(int fd, size_t size, uint32_t flags, uint32_t offs
++{
++    void* base = NULL;
++    int dup_fd = -1;
++
++    mIonClient = ion_client_create();
++
++    if (mIonClient < 0) {
++        ALOGE("MemoryHeapIon : ION client creation failed : %s", strerror(errno
++        mIonClient = -1;
++    } else {
++        if (fd >= 0) {
++            dup_fd = dup(fd);
++            if (dup_fd == -1) {
++                ALOGE("MemoryHeapIon : cannot dup fd (size[%u], fd[%d]) : %s", 
++            } else {
++                flags |= USE_ION_FD;
++                base = ion_map(dup_fd, size, 0);
++                if (base != MAP_FAILED) {
++                    init(dup_fd, base, size, flags, NULL);
++                } else {
++                    ALOGE("MemoryHeapIon : ION mmap failed(size[%u], fd[%d]): %
++                    ion_free(dup_fd);
++                }
++            }
++        } else {
++            ALOGE("MemoryHeapIon : fd parameter error(fd : %d)", fd);
++        }
++    }
++}
++
++MemoryHeapIon::~MemoryHeapIon()
++{
++    if (mIonClient != -1) {
++        ion_unmap(getBase(), getSize());
++        ion_client_destroy(mIonClient);
++        mIonClient = -1;
++    }
++}
++
++};
+-- 
+1.8.5.2
+

@@ -1,0 +1,56 @@
+From 08d85510fb25d2727c78e1111da5bf9cc6197272 Mon Sep 17 00:00:00 2001
+From: Andrew Dodd <atd7@cornell.edu>
+Date: Sun, 24 Nov 2013 15:08:59 -0500
+Subject: [PATCH] SensorEventQueue: Allow setRate on sensor enable
+
+4.3 and earlier would set the sensor rate on activation and then set it again
+when setRate was called.
+
+Some sensor HALs assume this will happen and ignore the first setRate
+
+Conditionally the first one back in for such broken HALs
+
+Change-Id: If1c259b0fd5517a1272cdad0a1abf1fe0fb5a7d1
+---
+ libs/gui/Android.mk           | 4 ++++
+ libs/gui/SensorEventQueue.cpp | 8 +++++++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/libs/gui/Android.mk b/libs/gui/Android.mk
+index c14c950..3151b38 100644
+--- a/libs/gui/Android.mk
++++ b/libs/gui/Android.mk
+@@ -49,6 +49,10 @@ ifeq ($(TARGET_BOARD_PLATFORM), tegra3)
+ 	LOCAL_CFLAGS += -DDONT_USE_FENCE_SYNC
+ endif
+ 
++ifeq ($(SENSORS_NEED_SETRATE_ON_ENABLE), true)
++        LOCAL_CFLAGS += -DSENSORS_SETRATE_ON_ENABLE
++endif
++
+ include $(BUILD_SHARED_LIBRARY)
+ 
+ ifeq (,$(ONE_SHOT_MAKEFILE))
+diff --git a/libs/gui/SensorEventQueue.cpp b/libs/gui/SensorEventQueue.cpp
+index c365671..0005336 100644
+--- a/libs/gui/SensorEventQueue.cpp
++++ b/libs/gui/SensorEventQueue.cpp
+@@ -128,8 +128,14 @@ status_t SensorEventQueue::disableSensor(Sensor const* sensor) const {
+ 
+ status_t SensorEventQueue::enableSensor(int32_t handle, int32_t samplingPeriodUs,
+                                         int maxBatchReportLatencyUs, int reservedFlags) const {
+-    return mSensorEventConnection->enableDisable(handle, true, us2ns(samplingPeriodUs),
++    status_t err = mSensorEventConnection->enableDisable(handle, true, us2ns(samplingPeriodUs),
+                                                  us2ns(maxBatchReportLatencyUs), reservedFlags);
++    #ifdef SENSORS_SETRATE_ON_ENABLE
++    if (err == NO_ERROR) {
++        mSensorEventConnection->setEventRate(handle, us2ns(samplingPeriodUs));
++    }
++    #endif
++    return err;
+ }
+ 
+ status_t SensorEventQueue::flush() const {
+-- 
+1.8.5.1
+
