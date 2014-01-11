@@ -100,6 +100,18 @@ static char *camera_fixup_getparams(int id, const char *settings)
     android::String8 strParams = params.flatten();
     char *ret = strdup(strParams.string());
 
+    
+    // Camera needs info about max-saturation, max-contrast and max-sharpness
+
+    params.set("max-saturation", DEFAULT_SATURATION);
+
+
+    params.set("max-contrast", DEFAULT_CONTRAST);
+
+
+    params.set("max-sharpness", DEFAULT_SHARPNESS);
+
+
     ALOGD("%s: get parameters fixed up", __FUNCTION__);
     return ret;
 }
