@@ -45,7 +45,6 @@ TARGET_CPU_VARIANT := cortex-a15
 
 # Enable QC's libm optimizations
 TARGET_USE_QCOM_BIONIC_OPTIMIZATION := true
-TARGET_USE_KRAIT_BIONIC_OPTIMIZATION := true
 
 # adb has root
 ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
