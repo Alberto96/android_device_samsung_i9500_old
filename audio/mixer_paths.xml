@@ -32,7 +32,7 @@ INPUT_CHANNEL_MAP {
   <ctl name="SPKOUTR NG SPKOUTR Switch" value="0" />
   <ctl name="SPKDAT1L NG SPKDAT1L Switch" value="0" />
   <ctl name="SPKDAT1R NG SPKDAT1R Switch" value="0" />
-  <ctl name="Noise Gate Threshold Volume" value="3" />
+  <ctl name="Noise Gate Threshold Volume" value="0" />
 
   <!-- Analog output AMP -->
   <!-- AP Side is mixed to Input 1 of each out mixer -->
