@@ -212,7 +212,6 @@ Only the three quirks included above are recognized at this point:
             <Quirk name="video-controller-check-enable" />
         </MediaCodec>
 
-
         <MediaCodec name="OMX.google.amrnb.decoder" type="audio/3gpp" />
         <MediaCodec name="OMX.google.amrwb.decoder" type="audio/amr-wb" />
         <MediaCodec name="OMX.google.aac.decoder" type="audio/mp4a-latm" />
@@ -231,7 +230,10 @@ Only the three quirks included above are recognized at this point:
         <MediaCodec name="OMX.google.vp8.decoder" type="video/x-vnd.on2.vp8" />
         <MediaCodec name="OMX.google.vp9.decoder" type="video/x-vnd.on2.vp9" />
 
-        <MediaCodec name="OMX.Exynos.MP3.Decoder" type="audio/mpeg" />
+	<MediaCodec name="OMX.Exynos.MP3.Decoder" type="audio/mpeg" >
+            <Quirk name="needs-flush-before-disable" />
+            <Quirk name="supports-multiple-frames-per-input-buffer" />
+      </MediaCodec>
     </Decoders>
 
     <Encoders>
