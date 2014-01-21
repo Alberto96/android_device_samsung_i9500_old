@@ -19,4 +19,7 @@
 
 #define BTM_DEF_LOCAL_NAME   "GT-I9500"
 
+#define BTA_SKIP_BLE_READ_REMOTE_FEAT TRUE
+#define BTA_DISABLE_DELAY 1000 /* in milliseconds */
+
 #endif
