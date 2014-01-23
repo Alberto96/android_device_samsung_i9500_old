@@ -109,6 +109,12 @@ PRODUCT_PACKAGES += \
     Tag \
     com.android.nfc_extras
 
+# IR packages (temp. disable it, not working)
+#PRODUCT_PACKAGES += \
+#    consumerir.exynos5410
+#PRODUCT_COPY_FILES += \
+#    frameworks/native/data/etc/android.hardware.consumerir.xml:system/etc/permissions/#android.hardware.consumerir.xml
+
 # NFCEE access control + configuration
 NFCEE_ACCESS_PATH := $(LOCAL_PATH)/nfc/nfcee_access.xml
 PRODUCT_COPY_FILES += \
