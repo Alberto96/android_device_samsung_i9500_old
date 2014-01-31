@@ -32,7 +32,7 @@ INPUT_CHANNEL_MAP {
   <ctl name="SPKOUTR NG SPKOUTR Switch" value="0" />
   <ctl name="SPKDAT1L NG SPKDAT1L Switch" value="0" />
   <ctl name="SPKDAT1R NG SPKDAT1R Switch" value="0" />
-  <ctl name="Noise Gate Threshold Volume" value="0" />
+  <ctl name="Noise Gate Threshold Volume" value="3" />
 
   <!-- Analog output AMP -->
   <!-- AP Side is mixed to Input 1 of each out mixer -->
@@ -89,11 +89,11 @@ INPUT_CHANNEL_MAP {
   <!-- need to move channeltype -->
 
   <!-- Gain for main and headset mics -->
-  <ctl name="IN1L Volume" value="30" />
-  <ctl name="IN1R Volume" value="30" />
+  <ctl name="IN1L Volume" value="18" />
+  <ctl name="IN1R Volume" value="17" />
 
   <!--  Gain for sub and 3rd mic -->
-  <ctl name="IN2L Volume" value="30" />
+  <ctl name="IN2L Volume" value="20" />
   <ctl name="IN2R Volume" value="30" />
 
   <!-- Mics to AIF2TX -->
@@ -241,7 +241,7 @@ INPUT_CHANNEL_MAP {
     <ctl name="Main Mic Switch" value="1" />
     <ctl name="LHPF1 Input 1" value="IN1L" />
     <ctl name="LHPF1 Input 1 Volume" value="32" />
-    <ctl name="IN1L Volume" value="30" />
+    <ctl name="IN1L Volume" value="18" />
     <ctl name="IN1L Digital Volume" value="128" />
   </path>
 
@@ -249,7 +249,7 @@ INPUT_CHANNEL_MAP {
     <ctl name="Sub Mic Switch" value="1" />
     <ctl name="LHPF2 Input 1" value="IN2L" />
     <ctl name="LHPF2 Input 1 Volume" value="32" />
-    <ctl name="IN2L Volume" value="30" />
+    <ctl name="IN2L Volume" value="17" />
     <ctl name="IN2L Digital Volume" value="128" />
   </path>
 
@@ -257,7 +257,7 @@ INPUT_CHANNEL_MAP {
     <ctl name="3rd Mic Switch" value="1" />
     <ctl name="LHPF1 Input 1" value="IN2R" />
     <ctl name="LHPF1 Input 1 Volume" value="32" />
-    <ctl name="IN2R Volume" value="30" />
+    <ctl name="IN2R Volume" value="20" />
     <ctl name="IN2R Digital Volume" value="128" />
   </path>
 
