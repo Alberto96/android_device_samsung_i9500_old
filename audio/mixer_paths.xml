@@ -89,11 +89,11 @@ INPUT_CHANNEL_MAP {
   <!-- need to move channeltype -->
 
   <!-- Gain for main and headset mics -->
-  <ctl name="IN1L Volume" value="18" />
-  <ctl name="IN1R Volume" value="17" />
+  <ctl name="IN1L Volume" value="30" />
+  <ctl name="IN1R Volume" value="30" />
 
   <!--  Gain for sub and 3rd mic -->
-  <ctl name="IN2L Volume" value="20" />
+  <ctl name="IN2L Volume" value="30" />
   <ctl name="IN2R Volume" value="30" />
 
   <!-- Mics to AIF2TX -->
@@ -240,25 +240,19 @@ INPUT_CHANNEL_MAP {
   <path name="builtin-mic">
     <ctl name="Main Mic Switch" value="1" />
     <ctl name="LHPF1 Input 1" value="IN1L" />
-    <ctl name="LHPF1 Input 1 Volume" value="32" />
-    <ctl name="IN1L Volume" value="18" />
-    <ctl name="IN1L Digital Volume" value="128" />
+    <ctl name="IN1L Volume" value="30" />
   </path>
 
   <path name="back-mic">
     <ctl name="Sub Mic Switch" value="1" />
     <ctl name="LHPF2 Input 1" value="IN2L" />
-    <ctl name="LHPF2 Input 1 Volume" value="32" />
-    <ctl name="IN2L Volume" value="17" />
-    <ctl name="IN2L Digital Volume" value="128" />
+    <ctl name="IN2L Volume" value="30" />
   </path>
 
   <path name="third-mic">
     <ctl name="3rd Mic Switch" value="1" />
     <ctl name="LHPF1 Input 1" value="IN2R" />
-    <ctl name="LHPF1 Input 1 Volume" value="32" />
-    <ctl name="IN2R Volume" value="20" />
-    <ctl name="IN2R Digital Volume" value="128" />
+    <ctl name="IN2R Volume" value="30" />
   </path>
 
   <path name="headset-in">
@@ -266,9 +260,7 @@ INPUT_CHANNEL_MAP {
     <ctl name="HPOUT1L Input 3" value="None" />
     <ctl name="HPOUT1R Input 3" value="None" />
     <ctl name="LHPF1 Input 1" value="IN1R" />
-    <ctl name="LHPF1 Input 1 Volume" value="32" />
     <ctl name="IN1R Volume" value="30" />
-    <ctl name="IN1R Digital Volume" value="128" />
   </path>
 
   <path name="sco-in">
