@@ -111,7 +111,7 @@ PRODUCT_PACKAGES += \
     Tag \
     com.android.nfc_extras
 
-# IR packages (temp. disable it, not working)
+# IR packages
 PRODUCT_PACKAGES += \
     consumerir.universal5410
 PRODUCT_COPY_FILES += \
