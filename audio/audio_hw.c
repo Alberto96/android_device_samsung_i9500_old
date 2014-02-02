@@ -891,11 +891,6 @@ static int out_set_parameters(struct audio_stream *stream, const char *kvpairs)
         pthread_mutex_lock(&adev->lock);
         pthread_mutex_lock(&out->lock);
         if (((adev->out_device) != val) && (val != 0)) {
-            /* force output standby to stop SCO pcm stream if needed */
-            if ((val & AUDIO_DEVICE_OUT_ALL_SCO) ^
-                    (out->device & AUDIO_DEVICE_OUT_ALL_SCO)) {
-                do_out_standby(out);
-            }
 
             out->device = val;
             adev->out_device = val;
