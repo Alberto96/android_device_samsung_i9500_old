@@ -19,8 +19,6 @@
 
 #define BTM_DEF_LOCAL_NAME   "GT-I9500"
 
-#define BTM_DEF_LOCAL_NAME "Nexus 10"
-
 // Networking, Capturing, Object Transfer
 // MAJOR CLASS: COMPUTER
 // MINOR CLASS: LAPTOP
