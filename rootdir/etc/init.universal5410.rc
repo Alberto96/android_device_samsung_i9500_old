@@ -517,6 +517,11 @@ service immvibed /system/bin/immvibed
     user shell
     group shell
     oneshot
+
+service perseusinit /sbin/perseus.sh
+    class core
+    user root
+    oneshot
  
 # SA, System SW, SAMSUNG
 service bugreport /system/bin/bugmailer.sh -v

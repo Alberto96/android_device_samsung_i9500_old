@@ -32,11 +32,37 @@ PRODUCT_PACKAGES += \
     init.universal5410.usb.rc \
     init.universal5410.wifi.rc \
     lpm.rc \
+    perseus.sh \
     ueventd.universal5410.rc
 
 # Recovery
 PRODUCT_PACKAGES += \
     init.recovery.universal5410.rc
+
+# Synapse Init files
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/res/synapse:root/res/synapse \
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.io:root/res/synapse/config.json.generate.io \
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.qos:root/res/synapse/config.json.generate.qos \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions:root/res/synapse/actions \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions/voltage:root/res/synapse/actions/voltage \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions/gpuvolt:root/res/synapse/actions/gpuvolt \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions/colour:root/res/synapse/actions/colour \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions/cpuvolt:root/res/synapse/actions/cpuvolt \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions/charge-source:root/res/synapse/actions/charge-source \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions/bracket-option:root/res/synapse/actions/bracket-option \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions/led:root/res/synapse/actions/led \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions/generic.native:root/res/synapse/actions/generic.native \
+    $(LOCAL_PATH)/rootdir/res/synapse/actions/generic:root/res/synapse/actions/generic \
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.cpu:root/res/synapse/config.json.generate.cpu \
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.battery:root/res/synapse/config.json.generate.battery \
+    $(LOCAL_PATH)/rootdir/res/synapse/uci:root/res/synapse/uci \
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.audio:root/res/synapse/config.json.generate.audio \
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.gpu:root/res/synapse/config.json.generate.gpu \
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.led:root/res/synapse/config.json.generate.led \
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.screen:root/res/synapse/config.json.generate.screen \
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate:root/res/synapse/config.json.generate
+
 
 # Audio
 PRODUCT_COPY_FILES += \
