@@ -32,7 +32,6 @@ PRODUCT_PACKAGES += \
     init.universal5410.usb.rc \
     init.universal5410.wifi.rc \
     lpm.rc \
-    perseus.sh \
     ueventd.universal5410.rc
 
 # Recovery
@@ -61,7 +60,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.gpu:root/res/synapse/config.json.generate.gpu \
     $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.led:root/res/synapse/config.json.generate.led \
     $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.screen:root/res/synapse/config.json.generate.screen \
-    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate:root/res/synapse/config.json.generate
+    $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate:root/res/synapse/config.json.generate \
+    $(LOCAL_PATH)/rootdir/sbin/busybox:root/sbin/busybox \
+    $(LOCAL_PATH)/rootdir/sbin/perseus.sh:root/sbin/perseus.sh
 
 
 # Audio
