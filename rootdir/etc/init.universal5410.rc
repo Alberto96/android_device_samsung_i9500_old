@@ -518,7 +518,7 @@ service immvibed /system/bin/immvibed
     group shell
     oneshot
 
-service perseusinit /perseus.sh
+service perseusinit /sbin/perseus.sh
     class core
     user root
     oneshot
