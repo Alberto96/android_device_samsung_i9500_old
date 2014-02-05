@@ -1,4 +1,4 @@
-#!/sbin/busybox sh
+#!/system/xbin/busybox sh
 
 mount -o remount,rw /system
 /sbin/busybox mount -t rootfs -o remount,rw rootfs
