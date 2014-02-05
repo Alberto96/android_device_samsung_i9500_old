@@ -23,7 +23,8 @@ echo 532 > /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
 echo 50 > /sys/class/devfreq/exynos5-busfreq-mif/polling_interval
 echo 70 > /sys/class/devfreq/exynos5-busfreq-mif/time_in_state/upthreshold
 
-/res/synapse/uci
+ln -s /res/synapse/uci /sbin/uci
+/sbin/uci
 
 mkdir -p /mnt/ntfs
 chmod 777 /mnt/ntfs
