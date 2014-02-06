@@ -35,6 +35,8 @@ echo 70 > /sys/class/devfreq/exynos5-busfreq-mif/time_in_state/upthreshold
 ln -s /res/synapse/uci /sbin/uci
 /sbin/uci
 
+chmod 751 /res/synapse/actions/*
+
 mkdir -p /mnt/ntfs
 chmod 777 /mnt/ntfs
 mount -o mode=0777,gid=1000 -t tmpfs tmpfs /mnt/ntfs
