@@ -1,4 +1,4 @@
-From aff63ecacdb395efb29faff0c4b1ed67e8861d4a Mon Sep 17 00:00:00 2001
+From 07602db964382a72fe4c721fdbb40bed01abb5c5 Mon Sep 17 00:00:00 2001
 From: Ethan Chen <intervigil@gmail.com>
 Date: Thu, 21 Nov 2013 13:02:24 -0800
 Subject: [PATCH] Camera: Support obtaining camera memory from MemoryHeapIon
@@ -6,17 +6,20 @@ Subject: [PATCH] Camera: Support obtaining camera memory from MemoryHeapIon
 * Exynos 5 devices want the ION file descriptor from MemoryHeapIon
 
 Change-Id: I9e445cf24c15713f713181667e7b7caa1a96592e
+
+Conflicts:
+	services/camera/libcameraservice/Android.mk
 ---
  services/camera/libcameraservice/Android.mk         |  4 ++++
  .../device1/CameraHardwareInterface.h               | 21 +++++++++++++++++++++
  2 files changed, 25 insertions(+)
 
-diff --git a/services/camera/libcameraservice/Android.mk b/services/camera/libca
-index 1a567b8..66fceff 100644
+diff --git a/services/camera/libcameraservice/Android.mk b/services/camera/libcameraservice/Android.mk
+index b04c27c..e4f6852 100644
 --- a/services/camera/libcameraservice/Android.mk
 +++ b/services/camera/libcameraservice/Android.mk
-@@ -69,6 +69,10 @@ ifeq ($(BOARD_HTC_3D_SUPPORT),true)
-     LOCAL_CFLAGS += -DHTC_3D_SUPPORT
+@@ -78,6 +78,10 @@ ifeq ($(BOARD_CAMERA_MSG_MGMT),true)
+     LOCAL_CFLAGS += -DCAMERA_MSG_MGMT
  endif
  
 +ifeq ($(BOARD_NEEDS_MEMORYHEAPION),true)
@@ -26,7 +29,7 @@ index 1a567b8..66fceff 100644
  LOCAL_MODULE:= libcameraservice
  
  include $(BUILD_SHARED_LIBRARY)
-diff --git a/services/camera/libcameraservice/device1/CameraHardwareInterface.h 
+diff --git a/services/camera/libcameraservice/device1/CameraHardwareInterface.h b/services/camera/libcameraservice/device1/CameraHardwareInterface.h
 index 2bdf827..94f4cbe 100644
 --- a/services/camera/libcameraservice/device1/CameraHardwareInterface.h
 +++ b/services/camera/libcameraservice/device1/CameraHardwareInterface.h
@@ -40,7 +43,7 @@ index 2bdf827..94f4cbe 100644
  
  namespace android {
  
-@@ -493,7 +496,11 @@ private:
+@@ -493,7 +496,11 @@ class CameraHardwareInterface : public virtual RefBase {
                           mBufSize(buf_size),
                           mNumBufs(num_buffers)
          {
@@ -52,7 +55,7 @@ index 2bdf827..94f4cbe 100644
              commonInitialization();
          }
  
-@@ -501,7 +508,11 @@ private:
+@@ -501,7 +508,11 @@ class CameraHardwareInterface : public virtual RefBase {
                           mBufSize(buf_size),
                           mNumBufs(num_buffers)
          {
@@ -64,16 +67,16 @@ index 2bdf827..94f4cbe 100644
              commonInitialization();
          }
  
-@@ -533,14 +544,24 @@ private:
+@@ -533,14 +544,24 @@ class CameraHardwareInterface : public virtual RefBase {
          camera_memory_t handle;
      };
  
 +#ifdef USE_MEMORY_HEAP_ION
-+    static camera_memory_t* __get_memory(int fd, size_t buf_size, uint_t num_bu
++    static camera_memory_t* __get_memory(int fd, size_t buf_size, uint_t num_bufs,
 +                                         void *ion_fd)
 +    {
 +#else
-     static camera_memory_t* __get_memory(int fd, size_t buf_size, uint_t num_bu
+     static camera_memory_t* __get_memory(int fd, size_t buf_size, uint_t num_bufs,
                                           void *user __attribute__((unused)))
      {
 +#endif
@@ -90,5 +93,4 @@ index 2bdf827..94f4cbe 100644
          return &mem->handle;
      }
 -- 
-1.8.5.2
-
+1.8.5.1
