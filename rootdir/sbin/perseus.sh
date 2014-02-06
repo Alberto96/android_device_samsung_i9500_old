@@ -36,6 +36,8 @@ ln -s /res/synapse/uci /sbin/uci
 chmod u+x /res/synapse/uci
 /sbin/uci
 
+chmod 751 /res/synapse/actions/*
+
 mkdir -p /mnt/ntfs
 chmod 777 /mnt/ntfs
 mount -o mode=0777,gid=1000 -t tmpfs tmpfs /mnt/ntfs
