@@ -61,7 +61,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.led:root/res/synapse/config.json.generate.led \
     $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.screen:root/res/synapse/config.json.generate.screen \
     $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate:root/res/synapse/config.json.generate \
-    $(LOCAL_PATH)/rootdir/sbin/busybox:root/sbin/busybox \
+    $(LOCAL_PATH)/rootdir/sbin/busybox:../../../$(LOCAL_PATH)/out/target/product/i9500/root/sbin/busybox \
     $(LOCAL_PATH)/rootdir/sbin/perseus.sh:root/sbin/perseus.sh
 
 
