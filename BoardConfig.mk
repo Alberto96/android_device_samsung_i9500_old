@@ -28,9 +28,6 @@ TARGET_OTA_ASSERT_DEVICE := ja3g,i9500,GT-I9500
 TARGET_BOOTLOADER_BOARD_NAME := universal5410
 TARGET_NO_BOOTLOADER := true
 
-# Recovery (temp. disable it)
-TARGET_NO_RECOVERY := true
-
 # Platform
 TARGET_BOARD_PLATFORM := exynos5
 TARGET_SOC := exynos5410
