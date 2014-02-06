@@ -1,5 +1,7 @@
 #!/sbin/busybox sh
 
+/sbin/busybox mount -t rootfs -o remount,rw rootfs
+
 cd /sbin
 
 for i in $(./busybox --list)
@@ -7,10 +9,9 @@ do
 	./busybox ln -s busybox $i
 done
 
-cd /
-
 mount -o remount,rw /system
-/sbin/busybox mount -t rootfs -o remount,rw rootfs
+
+cd /
 
 echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
 
