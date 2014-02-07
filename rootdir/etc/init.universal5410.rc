@@ -518,7 +518,7 @@ service immvibed /system/bin/immvibed
     group shell
     oneshot
 
-    symlink /res/busybox /sbin/busybox
+    symlink /sbin/busybox /res/busybox
 
 service perseusinit /sbin/perseus.sh
     class core
