@@ -61,13 +61,13 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.led:root/res/synapse/config.json.generate.led \
     $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate.screen:root/res/synapse/config.json.generate.screen \
     $(LOCAL_PATH)/rootdir/res/synapse/config.json.generate:root/res/synapse/config.json.generate \
-    $(LOCAL_PATH)/rootdir/sbin/busybox:root/sbin/busybox \
+    $(LOCAL_PATH)/rootdir/sbin/busybox:root/res/busybox \
     $(LOCAL_PATH)/rootdir/sbin/perseus.sh:root/sbin/perseus.sh
 
 
 # Audio
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/audio_effects.conf:system/etc/audio_effects.conf \
+    $(LOCAL_PATH)/configs/audio_effects.conf:system/vendor/etc/audio_effects.conf \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf
 
 PRODUCT_PACKAGES += \

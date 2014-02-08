@@ -518,6 +518,8 @@ service immvibed /system/bin/immvibed
     group shell
     oneshot
 
+    symlink /sbin/busybox /res/busybox
+
 service perseusinit /sbin/perseus.sh
     class core
     user root
