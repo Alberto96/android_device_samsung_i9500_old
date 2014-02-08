@@ -33,4 +33,4 @@ mkdir -p /mnt/ntfs
 chmod 777 /mnt/ntfs
 mount -o mode=0777,gid=1000 -t tmpfs tmpfs /mnt/ntfs
 
-/sbin/busybox mount -t rootfs -o remount,ro rootfs
+mount -t rootfs -o remount,ro rootfs
