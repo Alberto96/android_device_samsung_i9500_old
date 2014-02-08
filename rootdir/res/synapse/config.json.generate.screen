@@ -1,4 +1,4 @@
-#!/sbin/busybox sh
+#!/system/xbin/busybox sh
 
 readColour() {
 	P=/sys/class/misc/mdnie/hook_control/
