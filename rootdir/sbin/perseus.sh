@@ -1,17 +1,6 @@
-#!/sbin/busybox sh
+#!/system/xbin/busybox sh
 
-/sbin/busybox mount -t rootfs -o remount,rw rootfs
-
-cd /sbin
-
-for i in $(./busybox --list)
-do
-	./busybox ln -s busybox $i
-done
-
-mount -o remount,rw /system
-
-cd /
+mount -t rootfs -o remount,rw rootfs
 
 echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
 
@@ -33,16 +22,15 @@ echo 480 > /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
 echo 50 > /sys/class/devfreq/exynos5-busfreq-mif/polling_interval
 echo 70 > /sys/class/devfreq/exynos5-busfreq-mif/time_in_state/upthreshold
 
-chmod u+x /res/synapse/uci
+chmod 755 /res/synapse/uci
 
 ln -s /res/synapse/uci /sbin/uci
 /sbin/uci
 
-chmod 751 /res/synapse/actions/*
+chmod 755 /res/synapse/actions/*
 
 mkdir -p /mnt/ntfs
 chmod 777 /mnt/ntfs
 mount -o mode=0777,gid=1000 -t tmpfs tmpfs /mnt/ntfs
 
-/sbin/busybox mount -t rootfs -o remount,ro rootfs
-mount -o remount,ro /system
+mount -t rootfs -o remount,ro rootfs
